@@ -1,25 +1,28 @@
 import csv
 import random
 
-class Characteristic:
-    def __init__(self, label, motoricsBoundaries, sensoryBoundaries, readingBoundaries, structureBoundaries):
-        self.label = label
-        self.motoricsBoundaries = motoricsBoundaries
-        self.sensoryBoundaries = sensoryBoundaries
-        self.readingBoundaries = readingBoundaries
-        self.structureBoundaries = structureBoundaries
 
-    def getEntry(self):
-        return [random.uniform(self.motoricsBoundaries[0], self.motoricsBoundaries[1]),
-                random.uniform(self.sensoryBoundaries[0], self.sensoryBoundaries[1]),
-                random.uniform(self.readingBoundaries[0], self.readingBoundaries[1]),
-                random.uniform(self.structureBoundaries[0], self.structureBoundaries[1]),
+class Characteristic:
+    def __init__(self, label, motoricsboundaries, sensoryboundaries, readingboundaries, structureboundaries):
+        self.label = label
+        self.motoricsboundaries = motoricsboundaries
+        self.sensoryboundaries = sensoryboundaries
+        self.readingboundaries = readingboundaries
+        self.structureboundaries = structureboundaries
+
+    def getentry(self):
+        return [random.uniform(self.motoricsboundaries[0], self.motoricsboundaries[1]),
+                random.uniform(self.sensoryboundaries[0], self.sensoryboundaries[1]),
+                random.uniform(self.readingboundaries[0], self.readingboundaries[1]),
+                random.uniform(self.structureboundaries[0], self.structureboundaries[1]),
                 self.label]
 
 
-# set the filename and number of rows to generate 5.1,3.5,1.4,0.2,pictogram
+# set the filename and number of rows to generate
 filename = 'asd-data.csv'
-num_rows = 1500
+num_rows = 10000
+
+# define what characteristicts to be generated rows from
 characteristics = [Characteristic("pictogram", [0, 5], [0, 5], [0, 2], [3, 5]),
                    Characteristic("text", [0, 5], [3, 5], [3, 5], [3, 5]),
                    Characteristic("pictogramandtext", [0, 5], [4, 5], [3, 5], [4, 5])]
@@ -29,10 +32,12 @@ rows = []
 
 # generate random rows and append them to the list
 for i in range(num_rows):
-    rows.append(random.choice(characteristics).getEntry())
+    rows.append(random.choice(characteristics).getentry())
 
 # write the rows to a new CSV file
 with open(filename, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
     for row in rows:
         writer.writerow(row)
+
+print("Generated ", num_rows, " entries.")

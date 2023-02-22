@@ -8,22 +8,20 @@ import torch.optim as optim
 import tqdm
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
-import onnx
-import onnxruntime
 
 # read data and apply one-hot encoding
 data = pd.read_csv("asd-data.csv", header=None)
-X = data.iloc[:, 0:4] ## Feature set
-y = data.iloc[:, 4:] ## Label set
+x = data.iloc[:, 0:4]  # Feature set
+y = data.iloc[:, 4:]  # Label set
 ohe = OneHotEncoder(handle_unknown='ignore', sparse_output=False).fit(y)
 y = ohe.transform(y)
 
 # convert pandas DataFrame (X) and numpy array (y) into PyTorch tensors
-X = torch.tensor(X.values, dtype=torch.float32)
+x = torch.tensor(x.values, dtype=torch.float32)
 y = torch.tensor(y, dtype=torch.float32)
 
 # split
-X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.7, shuffle=True)
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, shuffle=True)
 
 
 class Multiclass(nn.Module):
@@ -45,9 +43,9 @@ loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # prepare model and training parameters
-n_epochs = 200
+n_epochs = 100
 batch_size = 5
-batches_per_epoch = len(X_train) // batch_size
+batches_per_epoch = len(x_train) // batch_size
 
 best_acc = - np.inf  # init to negative infinity
 best_weights = None
@@ -67,7 +65,7 @@ for epoch in range(n_epochs):
         for i in bar:
             # take a batch
             start = i * batch_size
-            X_batch = X_train[start:start + batch_size]
+            X_batch = x_train[start:start + batch_size]
             y_batch = y_train[start:start + batch_size]
             # forward pass
             y_pred = model(X_batch)
@@ -87,7 +85,7 @@ for epoch in range(n_epochs):
             )
     # set model in evaluation mode and run through the test set
     model.eval()
-    y_pred = model(X_test)
+    y_pred = model(x_test)
     ce = loss_fn(y_pred, y_test)
     acc = (torch.argmax(y_pred, 1) == torch.argmax(y_test, 1)).float().mean()
     ce = float(ce)
@@ -120,20 +118,8 @@ plt.legend()
 plt.show()
 
 # set up input tensor
-input_shape = X_train.shape[1:]
+input_shape = x_train.shape[1:]
 dummy_input = torch.randn(1, *input_shape)
 
 # export the model to ONNX
 torch.onnx.export(model, dummy_input, "model.onnx", opset_version=12)
-
-# verify the ONNX model
-onnx_model = onnx.load("model.onnx")
-onnx.checker.check_model(onnx_model)
-
-# create an inference session with the ONNX model
-# sess = onnxruntime.InferenceSession("model.onnx")
-
-# run a prediction using the ONNX model
-# input_data = X_test[0].unsqueeze(0)
-# output = sess.run(None, {"input": input_data.numpy()})
-# print(output)
