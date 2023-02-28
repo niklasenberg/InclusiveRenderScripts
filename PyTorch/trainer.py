@@ -14,7 +14,7 @@ data = pd.read_csv("asd-data.csv", header=None)
 x = data.iloc[:, 0:4]  # Feature set
 y = data.iloc[:, 4:]  # Label set
 ohe = OneHotEncoder(handle_unknown='ignore', sparse_output=False).fit(y)
-y = ohe.transform(y)
+y = ohe.transform(y)  # convert to OHE representation of labels
 
 # convert pandas DataFrame (X) and numpy array (y) into PyTorch tensors
 x = torch.tensor(x.values, dtype=torch.float32)
@@ -29,7 +29,7 @@ class Multiclass(nn.Module):
         super().__init__()
         self.hidden = nn.Linear(4, 8)
         self.act = nn.ReLU()
-        self.output = nn.Linear(8, 3)
+        self.output = nn.Linear(8, 4)
 
     def forward(self, x):
         x = self.act(self.hidden(x))
@@ -43,7 +43,7 @@ loss_fn = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 # prepare model and training parameters
-n_epochs = 100
+n_epochs = 200
 batch_size = 5
 batches_per_epoch = len(x_train) // batch_size
 
@@ -121,5 +121,4 @@ plt.show()
 input_shape = x_train.shape[1:]
 dummy_input = torch.randn(1, *input_shape)
 
-# export the model to ONNX
 torch.onnx.export(model, dummy_input, "model.onnx", opset_version=12)
