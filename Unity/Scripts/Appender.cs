@@ -47,7 +47,7 @@ public class Appender : MonoBehaviour
             Debug.Log("pictogram");
             return pictoObject;
                 case 1:
-                    Debug.Log("pictogram and text");
+                    Debug.Log("infographic");
                     return infographicObject;
                 case 2:
                     Debug.Log("static");
@@ -57,7 +57,7 @@ public class Appender : MonoBehaviour
                     Debug.Log("text");
                     return textObject;
         }
-        Debug.Log("no prediced object yet");
+        Debug.Log("no predicted object yet");
         return null;
     }
 

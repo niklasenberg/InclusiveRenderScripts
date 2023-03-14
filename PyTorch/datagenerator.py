@@ -2,7 +2,7 @@ import csv
 import random
 
 
-class Characteristic:
+class Profile:
     def __init__(self, label, repetitiveboundaries, sensoryboundaries, readingboundaries, structureboundaries):
         self.label = label
         self.repetitiveboundaries = repetitiveboundaries
@@ -10,7 +10,7 @@ class Characteristic:
         self.readingboundaries = readingboundaries
         self.structureboundaries = structureboundaries
 
-    def getentry(self):
+    def getdatapoint(self):
         return [random.uniform(self.repetitiveboundaries[0], self.repetitiveboundaries[1]),
                 random.uniform(self.sensoryboundaries[0], self.sensoryboundaries[1]),
                 random.uniform(self.readingboundaries[0], self.readingboundaries[1]),
@@ -22,17 +22,17 @@ filename = 'asd-data.csv'
 num_rows = 10000
 
 # define what characteristicts to be generated rows from
-characteristics = [Characteristic("pictogram", [0, 5], [0, 5], [0, 2], [3, 5]),
-                   Characteristic("text", [0, 5], [0, 2], [3, 5], [3, 5]),
-                   Characteristic("infographic", [0, 5], [0, 1], [3, 5], [4, 5]),
-                   Characteristic("static", [4, 5], [0, 1], [0, 5], [0, 5])]
+profiles = [Profile("pictogram", [0, 5], [0, 5], [0, 2], [3, 5]),
+            Profile("text", [0, 5], [0, 2], [3, 5], [3, 5]),
+            Profile("infographic", [0, 5], [0, 1], [3, 5], [4, 5]),
+            Profile("static", [4, 5], [0, 1], [0, 5], [0, 5])]
 
 # create a list to hold the rows
 rows = []
 
 # generate random rows and append them to the list
 for i in range(num_rows):
-    rows.append(random.choice(characteristics).getentry())
+    rows.append(random.choice(profiles).getdatapoint())
 
 # write the rows to a new CSV file
 with open(filename, 'w', newline='') as csvfile:
