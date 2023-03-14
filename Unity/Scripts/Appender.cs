@@ -5,7 +5,7 @@ using UnityEngine;
 public class Appender : MonoBehaviour
 {
     //Script logic
-    private float maxRenderDistance = 5.0f;
+    private float maxRenderDistance = 2.5f;
     private GameObject player;
     private GameObject[] taggedObjects;
     private List<GameObject> appendedObjects;
@@ -43,17 +43,17 @@ public class Appender : MonoBehaviour
         index = GameObject.FindGameObjectWithTag("ModelAgent").GetComponent<ModelAgent>().getTypeIndex();
         switch (index)
         {
-            case 0: 
+            case 0:
             Debug.Log("pictogram");
             return pictoObject;
-                case 1: 
+                case 1:
                     Debug.Log("pictogram and text");
                     return pictoAndTextObject;
-                case 2: 
+                case 2:
                     Debug.Log("static");
                     staticRendered = true;
                     return staticObject;
-                case 3: 
+                case 3:
                     Debug.Log("text");
                     return textObject;
         }
@@ -70,8 +70,8 @@ public class Appender : MonoBehaviour
         if(mirrored){
         GameObject newObject2 = Instantiate(predictedObject, taggedObject.transform);
         newObject2.transform.localPosition = new Vector3(-xOffset, yOffset, zOffset);
-        newObject2.transform.localRotation = Quaternion.identity;
-        appendedObjects.Add(newObject);
+        newObject2.transform.localRotation = Quaternion.identity*Quaternion.AngleAxis(180, Vector3.up);
+        appendedObjects.Add(newObject2);
         }
     }
 
@@ -82,17 +82,26 @@ public class Appender : MonoBehaviour
             // Update the renderer based on distance from the player
         foreach (GameObject appendedObject in appendedObjects)
         {
-            Renderer renderer = appendedObject.GetComponent<Renderer>();
-            if (renderer != null)
+            List<Renderer> renderers = new List<Renderer>();
+
+            renderers.Add(appendedObject.GetComponent<Renderer>());
+
+            for(int i = 0; i < appendedObject.transform.childCount; i++){
+                renderers.Add(appendedObject.transform.GetChild(i).GetComponent<Renderer>());
+            }
+
+            if (renderers.Count > 0)
             {
-                float distance = Vector3.Distance(appendedObject.transform.position, player.transform.position);
-                if (distance <= maxRenderDistance)
-                {
+                foreach (Renderer renderer in renderers){
+                    float distance = Vector3.Distance(appendedObject.transform.position, player.transform.position);
+                    if (distance <= maxRenderDistance)
+                    {
                     renderer.enabled = true;
-                }
-                else
-                {
+                    }
+                    else
+                    {
                     renderer.enabled = false;
+                    }
                 }
             }
         }
