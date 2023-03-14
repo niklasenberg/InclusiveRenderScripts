@@ -13,7 +13,7 @@ public class ModelAgent : MonoBehaviour
     //[0, 5], [0, 1], [3, 5], [4, 5] = pictogramandtext => predictedIndex = 1
     //[4, 5], [0, 1], [0, 5], [0, 5] = static => predictedIndex = 2
     //[0, 5], [0, 2], [3, 5], [3, 5] = text => predictedIndex = 3
-    public float feedbackStimulation = 4.5f;
+    public float repetitiveBehavior = 4.5f;
     public float sensorySensitivity = 0.5f;
     public float readingComprehension = 2.5f;
     public float structureNeed = 2.5f;
@@ -33,7 +33,7 @@ public class ModelAgent : MonoBehaviour
         //DataType dtype = DataType.Float;
 
         // Generate the random data and create a new tensor
-        float[] data = new float[4] { feedbackStimulation, sensorySensitivity, readingComprehension, structureNeed };
+        float[] data = new float[4] { repetitiveBehavior, sensorySensitivity, readingComprehension, structureNeed };
         Tensor inputTensor = new Tensor(shape, data);
 
         // Run the model to get output

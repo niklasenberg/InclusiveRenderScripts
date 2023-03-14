@@ -19,7 +19,7 @@ public class Appender : MonoBehaviour
     public float yOffset;
     public float zOffset;
     public GameObject pictoObject;
-    public GameObject pictoAndTextObject;
+    public GameObject infographicObject;
     public GameObject staticObject;
     public GameObject textObject;
 
@@ -48,7 +48,7 @@ public class Appender : MonoBehaviour
             return pictoObject;
                 case 1:
                     Debug.Log("pictogram and text");
-                    return pictoAndTextObject;
+                    return infographicObject;
                 case 2:
                     Debug.Log("static");
                     staticRendered = true;
