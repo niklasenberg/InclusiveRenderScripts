@@ -26,14 +26,14 @@ n = 1000  # number of iterations
 correct_predictions = 0
 
 for i in range(n):
-    # establish input tensors for each case
-    # pictogram
+    # establish input tensors for each case, labels are established in alphabetical order
+    # infographic
     input_data1 = torch.tensor(
-        [[random.uniform(0, 5), random.uniform(0, 5), random.uniform(0, 2), random.uniform(3, 5)]],
-        dtype=torch.float32)
-    # pictogramandtext
-    input_data2 = torch.tensor(
         [[random.uniform(0, 5), random.uniform(0, 1), random.uniform(3, 5), random.uniform(4, 5)]],
+        dtype=torch.float32)
+    # pictogram
+    input_data2 = torch.tensor(
+        [[random.uniform(0, 5), random.uniform(0, 5), random.uniform(0, 2), random.uniform(3, 5)]],
         dtype=torch.float32)
     # static
     input_data3 = torch.tensor(
@@ -50,7 +50,6 @@ for i in range(n):
     output3 = sess.run(None, {name: input_data3.numpy()})
     output4 = sess.run(None, {name: input_data4.numpy()})
 
-    # -1 -4 -2 0
     # get the predicted index of each output
     predicted_index1 = torch.argmax(torch.tensor(output1[0])).item()
     predicted_index2 = torch.argmax(torch.tensor(output2[0])).item()

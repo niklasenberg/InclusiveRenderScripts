@@ -5,13 +5,13 @@ import random
 class Profile:
     def __init__(self, label, repetitiveboundaries, sensoryboundaries, readingboundaries, structureboundaries):
         self.label = label
-        self.repetitiveboundaries = repetitiveboundaries
+        self.feedbackboundaries = repetitiveboundaries
         self.sensoryboundaries = sensoryboundaries
         self.readingboundaries = readingboundaries
         self.structureboundaries = structureboundaries
 
     def getdatapoint(self):
-        return [random.uniform(self.repetitiveboundaries[0], self.repetitiveboundaries[1]),
+        return [random.uniform(self.feedbackboundaries[0], self.feedbackboundaries[1]),
                 random.uniform(self.sensoryboundaries[0], self.sensoryboundaries[1]),
                 random.uniform(self.readingboundaries[0], self.readingboundaries[1]),
                 random.uniform(self.structureboundaries[0], self.structureboundaries[1]),

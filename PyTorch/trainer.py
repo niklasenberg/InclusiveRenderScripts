@@ -99,10 +99,10 @@ for epoch in range(n_epochs):
         best_weights = copy.deepcopy(model.state_dict())
     print(f"Epoch {epoch} validation: Cross-entropy={ce:.2f}, Accuracy={acc * 100:.1f}%")
 
-# Restore best model
+# restore best model
 model.load_state_dict(best_weights)
 
-# Plot the loss and accuracy
+# plot the loss and accuracy
 plt.plot(train_loss_hist, label="train")
 plt.plot(test_loss_hist, label="test")
 plt.xlabel("epochs")
@@ -117,8 +117,9 @@ plt.ylabel("accuracy")
 plt.legend()
 plt.show()
 
-# set up input tensor
+# set up dummy input tensor
 input_shape = x_train.shape[1:]
 dummy_input = torch.randn(1, *input_shape)
 
+# export
 torch.onnx.export(model, dummy_input, "model.onnx", opset_version=12)

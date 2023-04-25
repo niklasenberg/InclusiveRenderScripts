@@ -7,7 +7,6 @@ public class Appender : MonoBehaviour
     //Script logic
     private float maxRenderDistance = 2.5f;
     private GameObject player;
-    private GameObject[] taggedObjects;
     private List<GameObject> appendedObjects;
     private GameObject predictedObject;
     private bool staticRendered;
@@ -26,52 +25,14 @@ public class Appender : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        taggedObjects = GameObject.FindGameObjectsWithTag(TAG);
+        GameObject[] taggedObjects = GameObject.FindGameObjectsWithTag(TAG);
         player = GameObject.FindGameObjectWithTag("Player");
         appendedObjects = new List<GameObject>();
 
-        predictedObject = getPredictedObject();
+        predictedObject = GetPredictedObject();
 
         foreach (GameObject taggedObject in taggedObjects){
             AppendObject(taggedObject, xOffset, yOffset);
-        }
-    }
-
-    GameObject getPredictedObject(){
-        int index = -1;
-        new WaitUntil(() => GameObject.FindGameObjectWithTag("ModelAgent").GetComponent<ModelAgent>().IsInitialized);
-        index = GameObject.FindGameObjectWithTag("ModelAgent").GetComponent<ModelAgent>().getTypeIndex();
-        switch (index)
-        {
-            case 0:
-            Debug.Log("pictogram");
-            return pictoObject;
-                case 1:
-                    Debug.Log("infographic");
-                    return infographicObject;
-                case 2:
-                    Debug.Log("static");
-                    staticRendered = true;
-                    return staticObject;
-                case 3:
-                    Debug.Log("text");
-                    return textObject;
-        }
-        Debug.Log("no predicted object yet");
-        return null;
-    }
-
-    void AppendObject(GameObject taggedObject, float xOffset, float yOffset){
-        GameObject newObject = Instantiate(predictedObject, taggedObject.transform);
-        newObject.transform.localPosition = new Vector3(xOffset, yOffset, zOffset);
-        newObject.transform.localRotation = Quaternion.identity;
-        appendedObjects.Add(newObject);
-
-        if(mirrored){
-        GameObject newObject2 = Instantiate(predictedObject, taggedObject.transform);
-        newObject2.transform.localPosition = new Vector3(-xOffset, yOffset, zOffset);
-        newObject2.transform.localRotation = Quaternion.identity*Quaternion.AngleAxis(180, Vector3.up);
-        appendedObjects.Add(newObject2);
         }
     }
 
@@ -105,6 +66,43 @@ public class Appender : MonoBehaviour
                 }
             }
         }
+        }
+    }
+
+    private GameObject GetPredictedObject(){
+        int index = -1;
+        new WaitUntil(() => GameObject.FindGameObjectWithTag("ModelAgent").GetComponent<ModelAgent>().IsInitialized);
+        index = (int) GameObject.FindGameObjectWithTag("ModelAgent").GetComponent<ModelAgent>().TypeIndex;
+        switch (index)
+        {
+            case 0:
+            Debug.Log("pictogram");
+            return pictoObject;
+                case 1:
+                    Debug.Log("infographic");
+                    return infographicObject;
+                case 2:
+                    Debug.Log("static");
+                    staticRendered = true;
+                    return staticObject;
+                case 3:
+                    Debug.Log("text");
+                    return textObject;
+        }
+        Debug.Log("no predicted object yet");
+        return null;
+    }
+
+    private void AppendObject(GameObject taggedObject, float xOffset, float yOffset){
+        GameObject newObject = Instantiate(predictedObject, taggedObject.transform);
+        newObject.transform.localPosition = new Vector3(xOffset, yOffset, zOffset);
+        appendedObjects.Add(newObject);
+
+        if(mirrored){
+        GameObject newObject2 = Instantiate(predictedObject, taggedObject.transform);
+        newObject2.transform.localPosition = new Vector3(-xOffset, yOffset, zOffset);
+        newObject2.transform.localRotation *= Quaternion.AngleAxis(180, Vector3.forward);
+        appendedObjects.Add(newObject2);
         }
     }
 }
