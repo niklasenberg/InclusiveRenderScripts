@@ -6,7 +6,7 @@ using UnityEngine;
 public class ModelAgent : MonoBehaviour
 {
     public NNModel modelSource;
-    public float feedbackStimulation = 4.5f;
+    public float repetitiveBehaviour = 4.5f;
     public float sensorySensitivity = 0.5f;
     public float readingComprehension = 2.5f;
     public float structureNeed = 2.5f;
@@ -24,7 +24,7 @@ public class ModelAgent : MonoBehaviour
         int[] shape = new int[] { 1, 4 };
 
         // create new tensor from user input
-        float[] data = new float[4] { feedbackStimulation, sensorySensitivity, readingComprehension, structureNeed };
+        float[] data = new float[4] { repetitiveBehaviour, sensorySensitivity, readingComprehension, structureNeed };
         Tensor inputTensor = new Tensor(shape, data);
 
         // run inference

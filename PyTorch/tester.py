@@ -83,7 +83,7 @@ for i in range(10):
         dtype=torch.float32)
 
     print("\nRandom Characteristic")
-    print("Feedback stimulation: ", input_data4[0][0].item())
+    print("Repetitive behaviour: ", input_data4[0][0].item())
     print("Sensory sensitivity: ", input_data4[0][1].item())
     print("Reading comprehension: ", input_data4[0][2].item())
     print("Structure need: ", input_data4[0][3].item())
