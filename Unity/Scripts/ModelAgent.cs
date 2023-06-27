@@ -6,28 +6,27 @@ using UnityEngine;
 public class ModelAgent : MonoBehaviour
 {
     public NNModel modelSource;
-    public float repetitiveBehaviour = 4.5f;
-    public float sensorySensitivity = 0.5f;
-    public float readingComprehension = 2.5f;
-    public float structureNeed = 2.5f;
-    public bool IsInitialized { get; private set;}
-    public int TypeIndex { get; private set;}
+    public float feedbackStimulation = 2f;
+    public float sensorySensitivity = 3f;
+    public float readingComprehension = 2f;
+    public float structureNeed = 4f;
+    public bool IsInitialized { get; private set; }
+    public int TypeIndex { get; private set; }
 
     // Start is called before the first frame update
     void Start()
     {
-        // load model from source
         Model model = ModelLoader.Load(modelSource);
         IWorker worker = WorkerFactory.CreateWorker(WorkerFactory.Type.Compute, model);
 
-        // define tensor shape
+        // Define the shape of the tensor
         int[] shape = new int[] { 1, 4 };
 
-        // create new tensor from user input
-        float[] data = new float[4] { repetitiveBehaviour, sensorySensitivity, readingComprehension, structureNeed };
+        // Generate the random data and create a new tensor
+        float[] data = new float[4] { feedbackStimulation, sensorySensitivity, readingComprehension, structureNeed };
         Tensor inputTensor = new Tensor(shape, data);
 
-        // run inference
+        // Run the model to get output
         worker.Execute(inputTensor);
         Tensor outputTensor = worker.PeekOutput();
 
@@ -36,12 +35,12 @@ public class ModelAgent : MonoBehaviour
         TypeIndex = predictedIndex[0];
 
         IsInitialized = true;
-
-        //cleanup
+        // Clean up resources
         inputTensor.Dispose();
         outputTensor.Dispose();
         worker.Dispose();
     }
 
+    // Update is called once per frame
     void Update() { }
 }
